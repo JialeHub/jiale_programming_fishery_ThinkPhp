@@ -1,0 +1,501 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "嘉乐的程序设计 | 渔业信息采集系统",
+        "description": "\r\n *    获取列表list【Get】,获取某一资源read【Get】,添加add 【Post】,删除del【Delete】,修改edit【Put】；\r\n *    get | delete 方法采用序列化URL(Axios为:params)传参 Axios:【paramsSerializer:params=>qs.stringify(params, { strictNullHandling: true }),】，\r\n *    post | put 方法采用请求体(Axios为:data)传参，Axios一般采用默认的JSON即可【'Content-Type': 'application/json'】,\r\n *    注意：接口只允许AJAX请求,手动改为AJAX请求请在请求头加上【'X-Requested-With':'XMLHttpRequest'】\r\n *    注意：接口以JSON形式返回响应，请以JSON格式接收【'Accept: application/json'】\r\n *    提示：由于Swagger无法正常序列化多层嵌套数组/对象,因此该文档的get/delete方法的嵌套字段无法正常传递测试!",
+        "version": "1.0"
+    },
+    "paths": {
+        "/article/list": {
+            "get": {
+                "tags": [
+                    "Article | 文章"
+                ],
+                "summary": "获取 | 文章列表",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "请以Ajax方式请求",
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "页数：显示全部为-1",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": "1"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "每页大小：",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": "10"
+                        }
+                    },
+                    {
+                        "name": "sortList",
+                        "in": "query",
+                        "description": "排序列表：asc顺序 desc倒序 按数组顺序依次排序</br>【Axios传参例子：{sortList:[{id: &quot;desc&quot;},{title: &quot;asc&quot;}]}  => ?sortList[0][id]=desc&sortList[1][title]=asc】",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            },
+                            "default": [
+                                {
+                                    "id": "desc"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "searchList",
+                        "in": "query",
+                        "description": "搜索列表：[ ['字段名','查询表达式','查询条件'] , ['id','>','0'] ] 有顺序,查询规则：\n  <a target='_blank' href='https://www.kancloud.cn/manual/thinkphp6_0/1037537'>https://www.kancloud.cn/manual/thinkphp6_0/1037537</a>",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/article/read": {
+            "get": {
+                "tags": [
+                    "Article | 文章"
+                ],
+                "summary": "获取 | 指定文章",
+                "operationId": "app\\controller\\Article::read",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "请以Ajax方式请求",
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token：登录显示任意数据 | 不登陆只显示 status==1",
+                        "required": false,
+                        "schema": {
+                            "type": "bearerAuth"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "页数：显示全部为-1",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/article/add": {
+            "post": {
+                "tags": [
+                    "Article | 文章"
+                ],
+                "summary": "保存 | 新增文章",
+                "operationId": "app\\controller\\Article::save",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "请以Ajax方式请求",
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "description": "保存 | 新增文章",
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "description": "保存 | 新增文章",
+                                        "type": "string"
+                                    },
+                                    "cover": {
+                                        "description": "保存 | 新增文章",
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "description": "保存 | 新增文章",
+                                        "type": "integer"
+                                    },
+                                    "remark": {
+                                        "description": "保存 | 新增文章",
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "description": "保存 | 新增文章",
+                                        "type": "integer",
+                                        "default": 1
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "title": "",
+                                    "content": "",
+                                    "cover": "",
+                                    "type": 1,
+                                    "remark": "",
+                                    "status": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/dept/list": {
+            "get": {
+                "tags": [
+                    "Dept | 部门"
+                ],
+                "summary": "获取 | 部门列表（不分页）",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "请以Ajax方式请求",
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    },
+                    {
+                        "name": "tree",
+                        "in": "query",
+                        "description": "树结构：",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": "true"
+                        }
+                    },
+                    {
+                        "name": "sortList",
+                        "in": "query",
+                        "description": "排序列表：asc顺序 desc倒序",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            },
+                            "default": [
+                                {
+                                    "sort": "asc"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/menu/list": {
+            "get": {
+                "tags": [
+                    "Menu | 菜单"
+                ],
+                "summary": "获取 | 菜单列表（不分页）",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "请以Ajax方式请求",
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    },
+                    {
+                        "name": "tree",
+                        "in": "query",
+                        "description": "树结构：",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": "true"
+                        }
+                    },
+                    {
+                        "name": "sortList",
+                        "in": "query",
+                        "description": "排序列表：asc顺序 desc倒序",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            },
+                            "default": [
+                                {
+                                    "sort": "asc"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/role/list": {
+            "get": {
+                "tags": [
+                    "Role | 角色"
+                ],
+                "summary": "获取 | 用户列表",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "请以Ajax方式请求",
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    },
+                    {
+                        "name": "tree",
+                        "in": "query",
+                        "description": "树结构：",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": "true"
+                        }
+                    },
+                    {
+                        "name": "sortList",
+                        "in": "query",
+                        "description": "排序列表：asc顺序 desc倒序",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            },
+                            "default": [
+                                {
+                                    "id": "desc"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/swagger/explore": {
+            "get": {
+                "tags": [
+                    "Swagger | API文档"
+                ],
+                "summary": "更新Swagger文档",
+                "operationId": "app\\controller\\Swagger::explore",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/list": {
+            "get": {
+                "tags": [
+                    "User | 用户"
+                ],
+                "summary": "获取 | 用户列表",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "请以Ajax方式请求",
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    },
+                    {
+                        "name": "tree",
+                        "in": "query",
+                        "description": "树结构：",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": "true"
+                        }
+                    },
+                    {
+                        "name": "sortList",
+                        "in": "query",
+                        "description": "排序列表：asc顺序 desc倒序",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            },
+                            "default": [
+                                {
+                                    "id": "desc"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "Authorization": {
+                "type": "http",
+                "name": "Authorization",
+                "in": "header",
+                "scheme": "Bearer"
+            }
+        }
+    }
+}
